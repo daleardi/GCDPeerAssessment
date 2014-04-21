@@ -50,4 +50,5 @@ data<-rbind(test,train)
 mn_std_data<-data[,c(1:3,sort(c(grep("-std()",names(data),fixed=TRUE),grep("-mean()",names(data),fixed=TRUE))))]
 
 #Get the average of each column by activity type
-mean_data_by_activity<-aggregate(mn_std_data[,4:ncol(mn_std_data)],list(Activity_Label,Subject),mean)
+by<-list(Subject=mn_std_data$Subject,Activity_Label=mn_std_data$Activity_Label)
+mean_data_by_activity<-aggregate(mn_std_data[,4:ncol(mn_std_data)],by,mean)

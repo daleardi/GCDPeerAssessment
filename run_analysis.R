@@ -73,8 +73,8 @@ names(train)<-c("Subject",
 data<-rbind(test,train)
 
 #Get only mean and standard devistion columns
-mn_std_col<-sort(c(grep("-std()",names(data)),
-                   grep("-mean()",names(data))))
+mn_std_col<-sort(c(grep("-std",names(data)),
+                   grep("-mean",names(data))))
 mn_std_data<-data[,c(1:3,mn_std_col)]
 
 #Get the average of each column by activity type
@@ -83,5 +83,5 @@ by<-list(Subject = mn_std_data$Subject,
 tidy_data<-aggregate(mn_std_data[,4:ncol(mn_std_data)],by,mean)
  
 #Print the tidy data to file 
-write.table(tidy_data,"Tidy_Data.txt", sep=" ")
+write.table(tidy_data,"Tidy_Data.txt", sep=",")
  

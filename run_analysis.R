@@ -14,7 +14,8 @@
 ##     ## ##    ## ##    ## ##       ##    ## ##     ## ##       ##   ###    ##    
 ##     ##  ######   ######  ########  ######  ##     ## ######## ##    ##    ##  
 
-## This code assume you have downloaded and unzipped the "UCI HAR Dataset" folder into your working directory. 
+## This code assume you have downloaded and unzipped the "UCI HAR Dataset" 
+## folder into your working directory. 
 ##
 
 #Read Column names
@@ -40,7 +41,10 @@ for(i in 1:length(ytest$V1)){
 #combine the columns for complete test data frame
 test<-cbind(stest,ytest,act_labs_test,xtest)
 #Name the data frame
-names(test)<-c("Subject","Activity_Code","Activity_Label",as.character(features$V2))
+names(test)<-c("Subject",
+               "Activity_Code",
+               "Activity_Label",
+               as.character(features$V2))
 
 
 #Create Train Data Frame
@@ -60,14 +64,24 @@ for(i in 1:length(ytrain$V1)){
 #combine the columns for complete test data frame
 train<-cbind(strain,ytrain,act_labs_train,xtrain)
 #Name the data frame
-names(train)<-c("Subject","Activity_Code","Activity_Label",as.character(features$V2))
+names(train)<-c("Subject",
+                "Activity_Code",
+                "Activity_Label",
+                as.character(features$V2))
 
 #Create Full Data Frame
 data<-rbind(test,train)
 
 #Get only mean and standard devistion columns
-mn_std_data<-data[,c(1:3,sort(c(grep("-std()",names(data),fixed=TRUE),grep("-mean()",names(data),fixed=TRUE))))]
+mn_std_col<-sort(c(grep("-std()",names(data)),
+                   grep("-mean()",names(data))))
+mn_std_data<-data[,c(1:3,mn_std_col)]
 
 #Get the average of each column by activity type
-by<-list(Subject=mn_std_data$Subject, Activity_Label=mn_std_data$Activity_Label)
-mean_data_by_activity<-aggregate(mn_std_data[,4:ncol(mn_std_data)],by,mean)
+by<-list(Subject = mn_std_data$Subject, 
+         Activity_Label = mn_std_data$Activity_Label)
+tidy_data<-aggregate(mn_std_data[,4:ncol(mn_std_data)],by,mean)
+ 
+#Print the tidy data to file 
+write.table(tidy_data,"Tidy_Data.txt", sep=" ")
+ 
